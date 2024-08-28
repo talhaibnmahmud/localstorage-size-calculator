@@ -1,3 +1,6 @@
+import { RefreshCw, X } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
@@ -9,8 +12,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { RefreshCw, X } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
 
 const calculateLocalStorageCapacity = () => {
   const key = "test";
