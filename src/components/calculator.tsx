@@ -65,7 +65,7 @@ export function Component() {
           Chrome: calculatedCapacity,
           Firefox: Math.round(calculatedCapacity * 0.9),
           Safari: Math.round(calculatedCapacity * 0.95),
-          Edge: Math.round(calculatedCapacity * 1.05),
+          Edge: Math.round(calculatedCapacity * 1.0),
         });
       }, 0);
     } catch (error) {
