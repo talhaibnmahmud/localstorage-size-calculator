@@ -12,6 +12,36 @@ import {
 import { RefreshCw, X } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 
+const calculateLocalStorageCapacity = () => {
+  const key = "test";
+  let testValue = "x";
+  let totalSize = 0;
+
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    while (true) {
+      localStorage.setItem(key, testValue);
+      totalSize += testValue.length;
+      testValue = testValue + testValue;
+    }
+  } catch (e) {
+    console.error("Error calculating localStorage capacity:", e);
+    while (testValue.length > 0) {
+      try {
+        testValue = testValue.slice(0, testValue.length / 2);
+        localStorage.setItem(key, testValue);
+        totalSize += testValue.length;
+      } catch (e) {
+        console.error("Error calculating localStorage capacity:", e);
+        continue;
+      }
+    }
+  }
+
+  localStorage.removeItem(key);
+  return totalSize;
+};
+
 export function Component() {
   const [usage, setUsage] = useState(0);
   const [capacity, setCapacity] = useState(0);
@@ -20,36 +50,6 @@ export function Component() {
   const [newValue, setNewValue] = useState("");
   const [isCalculating, setIsCalculating] = useState(false);
   const [browserSizes, setBrowserSizes] = useState<Record<string, number>>({});
-
-  const calculateLocalStorageCapacity = () => {
-    const key = "test";
-    let testValue = "x";
-    let totalSize = 0;
-
-    try {
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      while (true) {
-        localStorage.setItem(key, testValue);
-        totalSize += testValue.length;
-        testValue = testValue + testValue;
-      }
-    } catch (e) {
-      console.error("Error calculating localStorage capacity:", e);
-      while (testValue.length > 0) {
-        try {
-          testValue = testValue.slice(0, testValue.length / 2);
-          localStorage.setItem(key, testValue);
-          totalSize += testValue.length;
-        } catch (e) {
-          console.error("Error calculating localStorage capacity:", e);
-          continue;
-        }
-      }
-    }
-
-    localStorage.removeItem(key);
-    return totalSize;
-  };
 
   const updateCapacity = useCallback(() => {
     setIsCalculating(true);
@@ -119,7 +119,7 @@ export function Component() {
   const usagePercentage = capacity > 0 ? (usage / capacity) * 100 : 0;
 
   return (
-    <div className="mx-auto max-w-md space-y-6 p-4">
+    <div className="mx-auto max-w-2xl space-y-6 p-4">
       <h1 className="text-center text-2xl font-bold">localStorage Size Calculator</h1>
       <div className="space-y-2">
         <div className="flex items-center justify-between">
@@ -142,7 +142,7 @@ export function Component() {
           type="text"
           placeholder="Key"
           value={newKey}
-          onChange={(e) => {
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             setNewKey(e.target.value);
           }}
         />
@@ -150,7 +150,7 @@ export function Component() {
           type="text"
           placeholder="Value"
           value={newValue}
-          onChange={(e) => {
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             setNewValue(e.target.value);
           }}
         />
